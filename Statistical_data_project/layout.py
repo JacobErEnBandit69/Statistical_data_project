@@ -44,13 +44,12 @@ def layout(app):
                                             'textAlign': 'center',
                                             'overflow': 'hidden',
                                             'minWidth': '80px',
-                                            'width': '80px', 
-                                           'maxWidth': '180px',
+                                            'width': '80px',
+                                            'maxWidth': '180px',
                                         }
-                                    )    
+                                    )
                                 ],
                             ),
-                            
                         ]
                     ),
                     html.Div(
@@ -62,7 +61,7 @@ def layout(app):
                                     dcc.Graph(
                                         id="full_round_bar_chart"
                                     )
-                                ]    
+                                ]
                             )
                         ]
                     )
@@ -75,10 +74,7 @@ def layout(app):
                         className="card-background-dropdown-timestamp",
                         children=[
                             html.Div(
-                                className="latest-update",
-                                children = [
-                                    html.Pre(id="latest_update"),
-                                ]
+                               html.Pre("not implemented yet")
                             ),
                             html.Div(
                                 className="dropdown-below-timestamp",
@@ -86,7 +82,7 @@ def layout(app):
                                     dcc.Dropdown(
                                         id='dropdown_below_timestamp',
                                         clearable=False
-                                    )    
+                                    )
                                 ],
                             ),
                         ]
@@ -97,7 +93,7 @@ def layout(app):
                             html.Div(
                                 className="ttb",
                                 children=[
-                                    html.H1(html.Pre(id="current_max_ttb")) 
+                                    html.H1(html.Pre(id="latest_update")) 
                                 ],
                             ),
                         ]
