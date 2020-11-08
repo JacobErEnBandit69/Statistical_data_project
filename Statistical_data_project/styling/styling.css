@@ -87,7 +87,7 @@ body{
 
 .card-background-circular-graph{
     margin-left: 2%;
-    width: 100%;
+    width: 98%;
     margin-top:2%;
     border-radius: .2em;
     border: 1px solid #cccccc;
@@ -97,7 +97,7 @@ body{
 }
 
 .circular-pie-chart{
-    width:95%;
+    width:100%;
     border-radius: .2em;
     border: 1px solid #cccccc;
     background-color:white;

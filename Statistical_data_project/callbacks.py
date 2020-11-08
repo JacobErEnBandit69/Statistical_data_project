@@ -43,7 +43,7 @@ def init_callback(app):
         print(df["gateway_name"].unique())
         options = [{'label': i, 'value': i} for i in sorted(list(df["gateway_name"].unique()))]
         options.append({"label": "all data", "value": "all_data"})
-        value = next(iter(options))["value"]
+        value =  "all_data"
         return "Data latest updated at: {}".format(time_now), options, value
 
     @app.callback(
@@ -148,7 +148,9 @@ def init_callback(app):
             go.Pie(
                 labels=["No GPS found", "GPS found"], 
                 values=[df_no_gps.shape[0], df_with_gps.shape[0]],
-                colors=["red", "green"]
+                marker=dict(
+                    colors=["red", "green"],
+                ),
             )
         ]
         fig = go.Figure(
