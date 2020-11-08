@@ -42,6 +42,11 @@ def indicate(rgbHex):
     rgbled(rgbHex)
 
 
+
+
+
+
+
 class Uart_IF:
     #class uses NMEA sentences, and splits by these. 
     def get_gps_buffer(self):
@@ -72,9 +77,9 @@ class GPS_module():
                     raw_lon = str(splitted_buffer[4])
 
                     #Conversion from NMES GPGGA version of Latitude degree to Latitude comma coordinate
-                    lat = float(raw_lat[0:1]) + float(raw_lat[2:len(raw_lat)])/60
+                    lat = float(raw_lat[:2]) + float(raw_lat[2:])/60
                     #Conversion from NMES GPGGA version of Longitude degree to Longitude comma coordinate
-                    lon = float(raw_lon[0:2]) + float(raw_lon[3:len(raw_lon)])/60 
+                    lon = float(raw_lon[:3]) + float(raw_lon[3:])/60 
                     indicate(pink)
                     sleep(recursions)
                     return lat, lon
