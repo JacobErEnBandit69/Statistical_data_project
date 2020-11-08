@@ -14,6 +14,10 @@ import dash_html_components as html
 
 from dash.dependencies import Input, Output
 
+def get_hour_selector_options():
+    options = [i for i in range(0,24)]
+    options.insert("all_data", 0)
+    return 
 
 def layout(app):
     app.layout = \
@@ -32,6 +36,7 @@ def layout(app):
                                 className="dropdown-below-timestamp",
                                 children=[
                                     html.H4(html.Pre(id="latest_update")),
+                                    html.Pre("Pick a gateway"),
                                     dcc.Dropdown(
                                         id='dropdown_below_timestamp',
                                         clearable=False
@@ -41,8 +46,21 @@ def layout(app):
                             html.Div(
                                 className="datepicker",
                                 children=[
+                                    html.Pre("Pick a date:"),
                                     dcc.DatePickerRange(
                                         id='datepicker',
+                                    )
+                                ],
+                            ),
+                            html.Div(
+                                className="hour-selector",
+                                children=[
+                                    html.Pre("Pick a specific interval:"),
+                                    dcc.Dropdown(
+                                        id='hour_selector',
+                                        multi=True,
+                                        clearable=True,
+                                        options = [i for i in range(0,24)],
                                     )
                                 ],
                             ),

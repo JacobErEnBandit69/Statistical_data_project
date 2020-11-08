@@ -18,6 +18,18 @@ class DataObject:
 
     def __init__(self):
         self.full_uplink_data = get_data_from_uplink_db()
+        
+def get_filtered_data(df, dd_value, start_date, end_date, hour_selector):
+    if hour_selector:
+        df[df["tx_latitude"].hour.isin(hour_selector)]
+        
+    start_date = pd.Timestamp(start_date)
+    end_date = pd.Timestamp(end_date)
+    if dd_value != "all_data":
+        df = df[df["gateway_name"] == dd_value]
+
+    df = df[(df["rx_timestamp"] > start_date) & (df["rx_timestamp"] < end_date)]  
+    return df
 
 def init_callback(app):
 
@@ -29,7 +41,7 @@ def init_callback(app):
             Output(component_id ='latest_update', component_property='style'),
         ],
         [
-            Input('data_updater', 'n_intervals')
+            Input(component_id='data_updater', component_property='n_intervals')
         ]
     )
     def update_all_data(n):
@@ -63,10 +75,10 @@ def init_callback(app):
             Output(component_id ='datepicker', component_property='max_date_allowed'),
         ],
         [
-            Input('dropdown_below_timestamp', 'value')
+            Input(component_id='dropdown_below_timestamp', component_property='value'),
+            Input(component_id='hour_selector', component_property='value')
         ]
     )
-
     def update_datepicker(dd_value):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
@@ -88,17 +100,14 @@ def init_callback(app):
             Input(component_id ='dropdown_below_timestamp', component_property='value'),
             Input(component_id ='datepicker', component_property='start_date'),
             Input(component_id ='datepicker', component_property='end_date'),
+            Input(component_id ='hour_selector', component_property='value'),
         ]
     )
-    def update_table_data(dd_value, start_date, end_date):
+    def update_table_data(dd_value, start_date, end_date, hour_selector):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
-        start_date = pd.Timestamp(start_date)
-        end_date = pd.Timestamp(end_date)
-        if dd_value != "all_data":
-            df = df[df["gateway_name"] == dd_value]
-
-        df = df[(df["rx_timestamp"] > start_date) & (df["rx_timestamp"] < end_date)]    
+        
+        df = get_filtered_data(df, dd_value, start_date, end_date, hour_selector)
 
         columns=[{"name": i, "id": i} for i in df.columns]
         data=df.to_dict('records')
@@ -113,18 +122,15 @@ def init_callback(app):
             Input(component_id ='dropdown_below_timestamp', component_property='value'),
             Input(component_id ='datepicker', component_property='start_date'),
             Input(component_id ='datepicker', component_property='end_date'),
+            Input(component_id ='hour_selector', component_property='value'),
         ]
     )
-    def update_map(dd_value, start_date, end_date):
+    def update_map(dd_value, start_date, end_date, hour_selector):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
-        start_date = pd.Timestamp(start_date)
-        end_date = pd.Timestamp(end_date)
-
-        if dd_value != "all_data":
-            df = df[df["gateway_name"] == dd_value]
-
-        df = df[(df["rx_timestamp"] > start_date) & (df["rx_timestamp"] < end_date)] 
+        
+        
+        df = get_filtered_data(df, dd_value, start_date, end_date, hour_selector)
 
         mapbox_access_token = "pk.eyJ1IjoiamFjb2I3NCIsImEiOiJjazhzcW9peXgwMjF2M21wOGdxenozMWRpIn0.cvEeafk5_3_FS-zkcOE6Jw"
         data=[
@@ -176,25 +182,26 @@ def init_callback(app):
             Output(component_id ='gps_success_circular_graph', component_property='figure'),
         ],
         [
-            Input(component_id ='dropdown_below_timestamp', component_property='value')
+            Input(component_id ='dropdown_below_timestamp', component_property='value'),
+            Input(component_id ='datepicker', component_property='start_date'),
+            Input(component_id ='datepicker', component_property='end_date'),
+            Input(component_id ='hour_selector', component_property='value'),
         ]
     )
-    def update_gps_piechart(dd_value):
+    def update_gps_piechart(dd_value, start_date, end_date, hour_selector):
         df_unfiltered = do.full_uplink_data
         df_with_gps = df_unfiltered[df_unfiltered["tx_latitude"] != 0]
         df_no_gps = df_unfiltered[df_unfiltered["tx_latitude"] == 0]
         
-        if dd_value != "all_data":
-            df_with_gps = df_with_gps[df_with_gps["gateway_name"] == dd_value]        
-            df_no_gps = df_no_gps[df_no_gps["gateway_name"] == dd_value]
-        
+        df_with_gps = get_filtered_data(df_with_gps, dd_value, start_date, end_date, hour_selector)
+        df_no_gps = get_filtered_data(df_no_gps, dd_value, start_date, end_date, hour_selector)
         
         data=[
             go.Pie(
                 labels=["No GPS found", "GPS found"], 
-                values=[df_no_gps.shape[0], df_with_gps.shape[0]],
+                values=[df_with_gps.shape[0], df_no_gps.shape[0]],
                 marker=dict(
-                    colors=["red", "green"],
+                    colors=["green", "red"],
                 ),
             )
         ]
@@ -202,7 +209,7 @@ def init_callback(app):
                    data=data,
                )
         fig.update_layout(
-            title="GPS rate of succes pr endpoint transmission",
+            title="GPS successes",
         )
         return [fig]
     

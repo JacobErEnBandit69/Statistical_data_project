@@ -113,3 +113,9 @@ body{
     padding: 1%
 }
 
+.hour-selector{
+    width: 95%; 
+    margin-bottom: 1%;
+    padding: 1%
+}
+
