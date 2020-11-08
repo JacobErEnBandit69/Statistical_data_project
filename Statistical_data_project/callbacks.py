@@ -26,6 +26,7 @@ def init_callback(app):
     @app.callback(
         [
             Output(component_id ='latest_update', component_property='children'),
+            Output(component_id ='latest_update', component_property='style'),
         ],
         [
             Input('data_updater', 'n_intervals')
@@ -34,7 +35,8 @@ def init_callback(app):
     def update_all_data(n):
         time_now = dt.datetime.now().strftime("%H:%M:%S  %d/%m/%Y")
         do.full_uplink_data = get_data_from_uplink_db()
-        return ["Data latest updated at: {}".format(time_now)]
+        style = {"align":"center"}
+        return ["Data last updated at: {}".format(time_now), style]
 
     @app.callback(
         [
@@ -52,8 +54,7 @@ def init_callback(app):
         value =  next(iter(options))["value"]
 
         return options, value
-    
-    
+
     @app.callback(
         [
             Output(component_id ='datepicker', component_property='start_date'),
@@ -65,16 +66,16 @@ def init_callback(app):
             Input('dropdown_below_timestamp', 'value')
         ]
     )
-    
+
     def update_datepicker(dd_value):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
         if dd_value != "all_data":
             df = df[df["gateway_name"] == dd_value]
-        
+
         start_date = df["rx_timestamp"].min()
         end_date = df["rx_timestamp"].max()
-        
+
         return start_date, end_date, start_date, end_date
 
 
@@ -92,11 +93,13 @@ def init_callback(app):
     def update_table_data(dd_value, start_date, end_date):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
+        start_date = pd.Timestamp(start_date)
+        end_date = pd.Timestamp(end_date)
         if dd_value != "all_data":
             df = df[df["gateway_name"] == dd_value]
-            
+
         df = df[(df["rx_timestamp"] > start_date) & (df["rx_timestamp"] < end_date)]    
-        
+
         columns=[{"name": i, "id": i} for i in df.columns]
         data=df.to_dict('records')
 
@@ -112,13 +115,15 @@ def init_callback(app):
             Input(component_id ='datepicker', component_property='end_date'),
         ]
     )
-    def update_map(dd_value):
+    def update_map(dd_value, start_date, end_date):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
-        
+        start_date = pd.Timestamp(start_date)
+        end_date = pd.Timestamp(end_date)
+
         if dd_value != "all_data":
             df = df[df["gateway_name"] == dd_value]
-        
+
         df = df[(df["rx_timestamp"] > start_date) & (df["rx_timestamp"] < end_date)] 
 
         mapbox_access_token = "pk.eyJ1IjoiamFjb2I3NCIsImEiOiJjazhzcW9peXgwMjF2M21wOGdxenozMWRpIn0.cvEeafk5_3_FS-zkcOE6Jw"

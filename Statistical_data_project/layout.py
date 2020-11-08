@@ -31,6 +31,7 @@ def layout(app):
                             html.Div(
                                 className="dropdown-below-timestamp",
                                 children=[
+                                    html.H4(html.Pre(id="latest_update")),
                                     dcc.Dropdown(
                                         id='dropdown_below_timestamp',
                                         clearable=False
@@ -42,19 +43,7 @@ def layout(app):
                                 children=[
                                     dcc.DatePickerRange(
                                         id='datepicker',
-                                        end_date_placeholder_text='Select date for data!(default is full)'
                                     )
-                                ],
-                            ),
-                        ]
-                    ),
-                    html.Div(
-                        className="card-background-max-ttb",
-                        children=[
-                            html.Div(
-                                className="ttb",
-                                children=[
-                                    html.H4(html.Pre(id="latest_update")) 
                                 ],
                             ),
                         ]
