@@ -18,17 +18,18 @@ class DataObject:
 
     def __init__(self):
         self.full_uplink_data = get_data_from_uplink_db()
-        
+
 def get_filtered_data(df, dd_value, start_date, end_date, hour_selector):
     if hour_selector:
-        df[df["tx_latitude"].hour.isin(hour_selector)]
-        
+       # df["tx_timestamp"] = pd.to_datetime(df["tx_timestamp"])
+        df = df[pd.to_datetime(df["tx_timestamp"]).dt.hour.isin(hour_selector)]
+
     start_date = pd.Timestamp(start_date)
     end_date = pd.Timestamp(end_date)
     if dd_value != "all_data":
         df = df[df["gateway_name"] == dd_value]
 
-    df = df[(df["rx_timestamp"] > start_date) & (df["rx_timestamp"] < end_date)]  
+    df = df[(df["tx_timestamp"] > start_date) & (df["tx_timestamp"] < end_date)]
     return df
 
 def init_callback(app):
@@ -52,11 +53,11 @@ def init_callback(app):
 
     @app.callback(
         [
-            Output(component_id ='dropdown_below_timestamp', component_property='options'),
-            Output(component_id ='dropdown_below_timestamp', component_property='value'),
+            Output(component_id='dropdown_below_timestamp', component_property='options'),
+            Output(component_id='dropdown_below_timestamp', component_property='value'),
         ],
         [
-            Input('dummy_id_for_default', 'style')
+            Input(component_id='dummy_id_for_default', component_property='style')
         ]
     )
     def update_dropdown(dummy):
@@ -76,7 +77,6 @@ def init_callback(app):
         ],
         [
             Input(component_id='dropdown_below_timestamp', component_property='value'),
-            Input(component_id='hour_selector', component_property='value')
         ]
     )
     def update_datepicker(dd_value):
@@ -106,7 +106,7 @@ def init_callback(app):
     def update_table_data(dd_value, start_date, end_date, hour_selector):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
-        
+
         df = get_filtered_data(df, dd_value, start_date, end_date, hour_selector)
 
         columns=[{"name": i, "id": i} for i in df.columns]

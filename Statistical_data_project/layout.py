@@ -60,7 +60,7 @@ def layout(app):
                                         id='hour_selector',
                                         multi=True,
                                         clearable=True,
-                                        options = [i for i in range(0,24)],
+                                        options = [{"value":i, "label":i} for i in range(0,24)],
                                     )
                                 ],
                             ),
