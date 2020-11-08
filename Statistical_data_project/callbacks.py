@@ -25,6 +25,7 @@ class DataObject:
 def init_callback(app):
 
     do = DataObject()
+
     @app.callback(
         [
             Output(component_id ='latest_update', component_property='children'),
@@ -41,6 +42,7 @@ def init_callback(app):
         df = do.full_uplink_data
         print(df["gateway_name"].unique())
         options = [{'label': i, 'value': i} for i in sorted(list(df["gateway_name"].unique()))]
+        options.append({"label": "all data", "value": "all_data"})
         value = next(iter(options))["value"]
         return "Data latest updated at: {}".format(time_now), options, value
 
@@ -48,7 +50,6 @@ def init_callback(app):
         [
             Output(component_id ='datatable', component_property='columns'),
             Output(component_id ='datatable', component_property='data'),
-            #Output(component_id ='datatable', component_property='style_data_conditional'),
         ],
         [
             Input('dropdown_below_timestamp', 'value')
@@ -58,9 +59,11 @@ def init_callback(app):
         text_color = "black"
         background_color = 'rgb(67, 255, 86)'
         df = do.full_uplink_data
-        df_gw_specific = df[df["gateway_name"] == dd_value]
-        columns=[{"name": i, "id": i} for i in df_gw_specific.columns]
-        data=df_gw_specific.to_dict('records')
+        df = df[df["tx_latitude"] != 0]
+        if dd_value != "all_data":
+            df = df[df["gateway_name"] == dd_value]
+        columns=[{"name": i, "id": i} for i in df.columns]
+        data=df.to_dict('records')
 
         return columns, data
 
@@ -75,6 +78,9 @@ def init_callback(app):
     def update_graph_hometeam(dd_value):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
+        if dd_value != "all_data":
+            df = df[df["gateway_name"] == dd_value]
+
         mapbox_access_token = "pk.eyJ1IjoiamFjb2I3NCIsImEiOiJjazhzcW9peXgwMjF2M21wOGdxenozMWRpIn0.cvEeafk5_3_FS-zkcOE6Jw"
         data=[
             go.Scattermapbox(

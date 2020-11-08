@@ -20,7 +20,7 @@ def layout(app):
     html.Div(
         className="Full_view",
         children=[
-            dcc.Interval(id='data_updater', interval=7200000 , n_intervals=0), 
+            dcc.Interval(id='data_updater', interval=60000 , n_intervals=0), 
             html.Div(
                 className="right_side_of_view",
                 children=[
@@ -32,7 +32,7 @@ def layout(app):
                                 children=[
                                     dash_table.DataTable(
                                         id='datatable',
-                                        style_as_list_view=True,
+                                        #style_as_list_view=True,
                                         fixed_rows={
                                             'headers': True
                                         },
@@ -74,7 +74,7 @@ def layout(app):
                         className="card-background-dropdown-timestamp",
                         children=[
                             html.Div(
-                               html.Pre("not implemented yet")
+                               html.Pre("Pick a Gateway")
                             ),
                             html.Div(
                                 className="dropdown-below-timestamp",
@@ -93,10 +93,17 @@ def layout(app):
                             html.Div(
                                 className="ttb",
                                 children=[
-                                    html.H1(html.Pre(id="latest_update")) 
+                                    html.H4(html.Pre(id="latest_update")) 
                                 ],
                             ),
                         ]
+                    ),
+                    html.Div(
+                        className="card-background-circular-graph",
+                        children=[
+                            className="circular-graph"
+
+                        ],
                     ),
                 ]
             ),
