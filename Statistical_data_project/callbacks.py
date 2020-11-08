@@ -21,7 +21,6 @@ class DataObject:
 
 def get_filtered_data(df, dd_value, start_date, end_date, hour_selector):
     if hour_selector:
-       # df["tx_timestamp"] = pd.to_datetime(df["tx_timestamp"])
         df = df[pd.to_datetime(df["tx_timestamp"]).dt.hour.isin(hour_selector)]
 
     start_date = pd.Timestamp(start_date)
@@ -123,13 +122,13 @@ def init_callback(app):
             Input(component_id ='datepicker', component_property='start_date'),
             Input(component_id ='datepicker', component_property='end_date'),
             Input(component_id ='hour_selector', component_property='value'),
+            Input(component_id ='map_legend_picker', component_property='value'),
         ]
     )
-    def update_map(dd_value, start_date, end_date, hour_selector):
+    def update_map(dd_value, start_date, end_date, hour_selector, legend_picker):
         df = do.full_uplink_data
         df = df[df["tx_latitude"] != 0]
-        
-        
+
         df = get_filtered_data(df, dd_value, start_date, end_date, hour_selector)
 
         mapbox_access_token = "pk.eyJ1IjoiamFjb2I3NCIsImEiOiJjazhzcW9peXgwMjF2M21wOGdxenozMWRpIn0.cvEeafk5_3_FS-zkcOE6Jw"
@@ -138,12 +137,12 @@ def init_callback(app):
                 mode="markers",
                 lat = df["tx_latitude"],
                 lon = df["tx_longitude"],
-                hovertext = df["rssi"],
+                hovertext = df[legend_picker],
                 marker=go.scattermapbox.Marker(
                     size=11,
-                    color=df["rssi"],
+                    color=df[legend_picker],
                     colorbar=dict(
-                        title="Rssi"
+                        title=legend_picker,
                     ),
                     colorscale="Jet",
                 )
@@ -167,7 +166,7 @@ def init_callback(app):
                 pitch=0,
                 zoom=16,
             ),
-            legend_title="RSSI for endpoints",
+            legend_title="{} for endpoints".format(legend_picker),
             font=dict(
                 family="Courier New, monospace",
                 size=18,
@@ -175,8 +174,7 @@ def init_callback(app):
             )
         )
         return [fig]
-    
-    
+
     @app.callback(
         [
             Output(component_id ='gps_success_circular_graph', component_property='figure'),
@@ -192,13 +190,13 @@ def init_callback(app):
         df_unfiltered = do.full_uplink_data
         df_with_gps = df_unfiltered[df_unfiltered["tx_latitude"] != 0]
         df_no_gps = df_unfiltered[df_unfiltered["tx_latitude"] == 0]
-        
+
         df_with_gps = get_filtered_data(df_with_gps, dd_value, start_date, end_date, hour_selector)
         df_no_gps = get_filtered_data(df_no_gps, dd_value, start_date, end_date, hour_selector)
-        
+
         data=[
             go.Pie(
-                labels=["No GPS found", "GPS found"], 
+                labels=["GPS found", "No GPS found"],
                 values=[df_with_gps.shape[0], df_no_gps.shape[0]],
                 marker=dict(
                     colors=["green", "red"],
@@ -212,8 +210,6 @@ def init_callback(app):
             title="GPS successes",
         )
         return [fig]
-    
-    
 
 
 

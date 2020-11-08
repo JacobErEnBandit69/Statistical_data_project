@@ -25,7 +25,7 @@ def layout(app):
         className="Full_view",
         children=[
             html.Div(id="dummy_id_for_default"),
-            dcc.Interval(id='data_updater', interval=60000 , n_intervals=0), 
+            dcc.Interval(id='data_updater', interval=60000 , n_intervals=0),
             html.Div(
                 className="left_half_of_view",
                 children=[
@@ -116,10 +116,24 @@ def layout(app):
                         className="graph-card",
                         children=[
                             html.Div(
-                                className="historical-graph-odds-development-hometeam",
+                                className="map_for_endpoint_transmissions",
+                                children=[
+                                    dcc.RadioItems(
+                                        id="map_legend_picker",
+                                        options=[
+                                            {'label': 'RSSI', 'value': 'rssi'},
+                                            {'label': 'SNR', 'value': 'loRaSNR'},
+                                            {'label': 'Datarate', 'value': 'datarate'},
+                                        ],
+                                        value='rssi',
+                                    )
+                                ]
+                            ),
+                            html.Div(
+                                className="map_for_endpoint_transmissions",
                                 children=[
                                     dcc.Graph(
-                                        id="full_round_bar_chart"
+                                        id="full_round_bar_chart",
                                     )
                                 ]
                             )
