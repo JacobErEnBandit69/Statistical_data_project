@@ -31,6 +31,6 @@ if __name__ == '__main__':
     init_callback(app)
     print("{}/styling".format(Path(__file__).parent))
 
-    app.run_server(host="192.168.0.13", debug=True, port=8050)
+    app.run_server(debug=True)#host="192.168.0.13", debug=True, port=8050)
 
 

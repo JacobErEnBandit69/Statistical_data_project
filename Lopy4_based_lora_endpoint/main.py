@@ -72,10 +72,11 @@ class GPS_module():
                     raw_lon = str(splitted_buffer[4])
 
                     #Conversion from NMES GPGGA version of Latitude degree to Latitude comma coordinate
-                    lat = float(raw_lat[0:2]) + float(raw_lat[2:len(raw_lat)])/60
+                    lat = float(raw_lat[0:1]) + float(raw_lat[2:len(raw_lat)])/60
                     #Conversion from NMES GPGGA version of Longitude degree to Longitude comma coordinate
-                    lon = float(raw_lon[0:3]) + float(raw_lon[3:len(raw_lon)])/60 
-                    
+                    lon = float(raw_lon[0:2]) + float(raw_lon[3:len(raw_lon)])/60 
+                    indicate(pink)
+                    sleep(recursions)
                     return lat, lon
                 else:
                     print("Critical data not present in gps_buffer")
@@ -91,7 +92,7 @@ class LoRa_IF:
     
     def set_socket_configuration(self):
         s = socket.socket(socket.AF_LORA, socket.SOCK_RAW)
-        s.setsockopt(socket.SOL_LORA, socket.SO_DR, 5) 
+        s.setsockopt(socket.SOL_LORA, socket.SO_DR, 0) 
         #s.setsockopt(socket.SOL_LORA, socket.SO_CONFIRMED, True) #So_fonfirmed flag is set, for confirmed uplinks only, otherwise retransmission 
         s.setblocking(True)
         return s

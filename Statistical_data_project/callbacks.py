@@ -124,6 +124,41 @@ def init_callback(app):
             )
         )
         return [fig]
+    
+    
+    @app.callback(
+        [
+            Output(component_id ='gps_success_circular_graph', component_property='figure'),
+        ],
+        [
+            Input(component_id ='dropdown_below_timestamp', component_property='value')
+        ]
+    )
+    def update_gps_piechart(dd_value):
+        df_unfiltered = do.full_uplink_data
+        df_with_gps = df_unfiltered[df_unfiltered["tx_latitude"] != 0]
+        df_no_gps = df_unfiltered[df_unfiltered["tx_latitude"] == 0]
+        
+        if dd_value != "all_data":
+            df_with_gps = df_with_gps[df_with_gps["gateway_name"] == dd_value]        
+            df_no_gps = df_no_gps[df_no_gps["gateway_name"] == dd_value]
+        
+        
+        data=[
+            go.Pie(
+                labels=["No GPS found", "GPS found"], 
+                values=[df_no_gps.shape[0], df_with_gps.shape[0]],
+                colors=["red", "green"]
+            )
+        ]
+        fig = go.Figure(
+                   data=data,
+               )
+        fig.update_layout(
+            title="GPS rate of succes pr endpoint transmission",
+        )
+        return [fig]
+    
 
 
 

@@ -101,8 +101,14 @@ def layout(app):
                     html.Div(
                         className="card-background-circular-graph",
                         children=[
-                            className="circular-graph"
-
+                            html.Div(
+                                className="circular-pie-chart",
+                                children=[
+                                    dcc.Graph(
+                                        id="gps_success_circular_graph"
+                                    )
+                                ],
+                            ),
                         ],
                     ),
                 ]

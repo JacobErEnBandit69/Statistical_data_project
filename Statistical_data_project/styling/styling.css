@@ -68,6 +68,7 @@ body{
     width: 98%;
     padding: 1%
 }
+
 .latest-update{
     width: 98%;
     padding: 1%
@@ -84,3 +85,23 @@ body{
     text-align:left;
 }
 
+.card-background-circular-graph{
+    margin-left: 2%;
+    width: 100%;
+    margin-top:2%;
+    border-radius: .2em;
+    border: 1px solid #cccccc;
+    background-color:white;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    text-align:left;
+}
+
+.circular-pie-chart{
+    width:95%;
+    border-radius: .2em;
+    border: 1px solid #cccccc;
+    background-color:white;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    text-align:left;
+    padding:1%
+}
