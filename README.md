@@ -1,4 +1,4 @@
-# Chirpstack_lora_cloud_projectcC
+# Chirpstack_lora_cloud_project
 Linux based project which uses the python framework Dash to display data in web format.
 The project is using the LoRaWAN-Chirpstack stack as follows: 
 
