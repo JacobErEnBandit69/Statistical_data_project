@@ -29,8 +29,6 @@ def init_callback(app):
     @app.callback(
         [
             Output(component_id ='latest_update', component_property='children'),
-            Output(component_id ='dropdown_below_timestamp', component_property='options'),
-            Output(component_id ='dropdown_below_timestamp', component_property='value'),
         ],
         [
             Input('data_updater', 'n_intervals')
@@ -39,12 +37,26 @@ def init_callback(app):
     def update_all_data(n):
         time_now = dt.datetime.now().strftime("%H:%M:%S  %d/%m/%Y")
         do.full_uplink_data = get_data_from_uplink_db()
+        return ["Data latest updated at: {}".format(time_now)]
+
+    @app.callback(
+        [
+            Output(component_id ='dropdown_below_timestamp', component_property='options'),
+            Output(component_id ='dropdown_below_timestamp', component_property='value'),
+        ],
+        [
+            Input('test', 'style')
+        ]
+    )
+    def update_dropdown(dummy):
         df = do.full_uplink_data
-        print(df["gateway_name"].unique())
         options = [{'label': i, 'value': i} for i in sorted(list(df["gateway_name"].unique()))]
-        options.append({"label": "all data", "value": "all_data"})
-        value =  "all_data"
-        return "Data latest updated at: {}".format(time_now), options, value
+        options.insert(0, {"label": "all data", "value": "all_data"})
+        value =  next(iter(options))["value"]
+
+        return options, value
+
+
 
     @app.callback(
         [

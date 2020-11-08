@@ -20,6 +20,7 @@ def layout(app):
     html.Div(
         className="Full_view",
         children=[
+            html.Div(id="test"),
             dcc.Interval(id='data_updater', interval=60000 , n_intervals=0), 
             html.Div(
                 className="right_side_of_view",
