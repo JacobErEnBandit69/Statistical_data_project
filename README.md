@@ -1,7 +1,7 @@
 # Chirpstack_lora_cloud_projectcC
 Linux based project which uses the python framework Dash to display data in web format.
 The project is using the LoRaWAN-Chirpstack stack as follows: 
-![alt text](https://github.com/JacobKjaerager/Chirpstack_lora_cloud_project/blob/main/non_code_graphics/Architecture_lora_project.pdf?raw=true)
+![alt text](https://github.com/JacobKjaerager/Chirpstack_lora_cloud_project/blob/main/non_code_graphics/Architecture_lora_project.PNG?raw=true)
 
 The project uses the Postgres integration from the Chirpstack-application-server to update the database, the Flask-based Dash application the makes requests to this pr config every 60 second 
 
