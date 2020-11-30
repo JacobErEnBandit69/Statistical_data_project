@@ -188,12 +188,12 @@ def init_callback(app):
     )
     def update_gps_piechart(dd_value, start_date, end_date, hour_selector):
         df_unfiltered = do.full_uplink_data
-        df_with_gps = df_unfiltered[df_unfiltered["tx_latitude"] != 0]
-        df_no_gps = df_unfiltered[df_unfiltered["tx_latitude"] == 0]
 
-        df_with_gps = get_filtered_data(df_with_gps, dd_value, start_date, end_date, hour_selector)
-        df_no_gps = get_filtered_data(df_no_gps, dd_value, start_date, end_date, hour_selector)
 
+        df_user_inputted = get_filtered_data(df_unfiltered, dd_value, start_date, end_date, hour_selector)
+
+        df_with_gps = df_user_inputted[df_user_inputted["tx_latitude"] != 0]
+        df_no_gps = df_user_inputted[df_user_inputted["tx_latitude"] == 0]
         data=[
             go.Pie(
                 labels=["GPS found", "No GPS found"],

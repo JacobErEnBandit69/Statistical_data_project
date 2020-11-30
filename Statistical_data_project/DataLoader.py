@@ -9,7 +9,7 @@ def get_data_from_uplink_db():
                                     database="chirpstack_as_events")
       cursor = connection.cursor()
 
-      postgreSQL_select_Query = "SELECT application_name, rx_info, dr, received_at, object  FROM device_up WHERE application_name='Test_app001'"
+      postgreSQL_select_Query = "SELECT application_name, rx_info, dr, received_at, object  FROM device_up WHERE application_name='OTAA_test_app'"
 
       cursor.execute(postgreSQL_select_Query)
       db_data = cursor.fetchall()
